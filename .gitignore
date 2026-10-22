@@ -1,0 +1,73 @@
+# Ambiente Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
+*.egg
+
+# Testes / cobertura / type checkers
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Build / empacotamento (PyInstaller)
+build/
+dist/
+*.spec
+*.manifest
+
+# Logs e temporários
+*.log
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.idea/
+.vscode/
+*.code-workspace
+
+# Variáveis de ambiente e credenciais genéricas
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# Material sensível — nunca versionar
+secrets/
+*.asc
+*.asc.*
+*.gpg
+*.pgp
+*.key
+*.priv
+*.private
+*.secret
+*.sig
+*.legacy
+*-private-backup*
+*-private-backup-protected*
+PRIVATE-*
+.gnupg/
+
+# Exceções explícitas (nenhum material de chave)
+!requirements.txt
+!README.md
+!SECURITY.md
