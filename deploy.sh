@@ -23,7 +23,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
 Uso: ./deploy.sh [X.XX.XXX]
 
   Cria branch YYYYMMDDNN, grava VERSION, faz tag X.XX.XXX,
-  faz merge em main (código mais atualizado), push e regenera o binário.
+  faz merge em master (código mais atualizado), push e regenera o binário.
 
   Sem argumentos: incrementa o patch a partir da última tag
   (ou usa VERSION / 1.00.001 na primeira vez).
@@ -42,13 +42,8 @@ else
   git remote add origin "$REMOTE_URL"
 fi
 
-# Branch estável onde fica o código mais atualizado
-MAIN_BRANCH="main"
-if git show-ref --verify --quiet "refs/heads/master"; then
-  if ! git show-ref --verify --quiet "refs/heads/main"; then
-    MAIN_BRANCH="master"
-  fi
-fi
+# Branch estável onde fica o código mais atualizado (sempre master)
+MAIN_BRANCH="master"
 
 parse_version() {
   local v="$1"
@@ -170,5 +165,5 @@ echo ""
 echo "Deploy concluído."
 echo "  branch  $BRANCH"
 echo "  tag     $TAG"
-echo "  main    $MAIN_BRANCH (atualizada; checkout ativo)"
+echo "  master  $MAIN_BRANCH (atualizada; checkout ativo)"
 echo "  binário dist/pgp-desk"
