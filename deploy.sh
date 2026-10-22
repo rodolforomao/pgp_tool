@@ -132,7 +132,7 @@ fi
 
 echo "Branch: $BRANCH"
 echo "Tag:    $TAG"
-echo "Main:   $MAIN_BRANCH"
+echo "Master: $MAIN_BRANCH"
 echo "Remote: $REMOTE_URL"
 
 # Deploy parte sempre do código estável
