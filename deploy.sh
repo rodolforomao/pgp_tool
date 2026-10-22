@@ -23,7 +23,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
 Uso: ./deploy.sh [X.XX.XXX]
 
   Cria branch YYYYMMDDNN, grava VERSION, faz tag X.XX.XXX,
-  push para origin e regenera o binário com ./build.sh.
+  faz merge em main (código mais atualizado), push e regenera o binário.
 
   Sem argumentos: incrementa o patch a partir da última tag
   (ou usa VERSION / 1.00.001 na primeira vez).
@@ -40,6 +40,14 @@ if git remote get-url origin >/dev/null 2>&1; then
   git remote set-url origin "$REMOTE_URL"
 else
   git remote add origin "$REMOTE_URL"
+fi
+
+# Branch estável onde fica o código mais atualizado
+MAIN_BRANCH="main"
+if git show-ref --verify --quiet "refs/heads/master"; then
+  if ! git show-ref --verify --quiet "refs/heads/main"; then
+    MAIN_BRANCH="master"
+  fi
 fi
 
 parse_version() {
@@ -129,7 +137,12 @@ fi
 
 echo "Branch: $BRANCH"
 echo "Tag:    $TAG"
+echo "Main:   $MAIN_BRANCH"
 echo "Remote: $REMOTE_URL"
+
+# Deploy parte sempre do código estável
+git checkout "$MAIN_BRANCH"
+git pull --ff-only origin "$MAIN_BRANCH" 2>/dev/null || true
 
 git checkout -b "$BRANCH"
 
@@ -145,6 +158,11 @@ echo "A enviar branch e tag…"
 git push -u origin "$BRANCH"
 git push origin "refs/tags/$TAG"
 
+echo "A consolidar em $MAIN_BRANCH…"
+git checkout "$MAIN_BRANCH"
+git merge --ff-only "$BRANCH"
+git push origin "$MAIN_BRANCH"
+
 echo "A regenerar binário…"
 "$DIR/build.sh"
 
@@ -152,4 +170,5 @@ echo ""
 echo "Deploy concluído."
 echo "  branch  $BRANCH"
 echo "  tag     $TAG"
+echo "  main    $MAIN_BRANCH (atualizada; checkout ativo)"
 echo "  binário dist/pgp-desk"
